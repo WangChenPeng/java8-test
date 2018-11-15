@@ -46,10 +46,10 @@ public class TestLambda2 {
      */
     @Test
     public void test2() {
-        String newStr1 = strHandler("\t\t\t java8好用啊   ", (str) -> str.trim().toUpperCase());
+        String newStr1 = strHandler("java8   ", (str) -> str.trim().toUpperCase());
         System.out.println(newStr1);
 
-        String newStr2 = strHandler("\t\t\t java8好用啊   ", (str) -> str.trim().substring(0, 4));
+        String newStr2 = strHandler("java8   ", (str) -> str.trim().substring(0, 4));
         System.out.println(newStr2);
     }
 

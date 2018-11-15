@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Comparator;
 import java.util.function.Consumer;
+import java.util.function.DoubleBinaryOperator;
 
 /**
  * 左侧 lamdba表达式的参数列表
@@ -18,6 +19,10 @@ public class TestLambda {
     @Test
     public void test1(){
         Runnable r = () -> System.out.println("hello lamdba");
+        String str = "123456789";
+        Runnable runnable = () -> System.out.println("123");
+        runnable.run();
+
         r.run();
     }
 
@@ -28,6 +33,8 @@ public class TestLambda {
     @Test
     public void test2(){
         Consumer<String> stringConsumer = (x) -> System.out.println(x);
+        Consumer<String> tConsumer = (x) -> System.out.println(x);
+        tConsumer.accept("9999");
         stringConsumer.accept("java8好用");
     }
 
@@ -38,6 +45,8 @@ public class TestLambda {
     @Test
     public void test3(){
         Consumer<String> stringConsumer = x -> System.out.println(x);
+        Consumer<String> tConsumer = x -> System.out.println(x);
+        tConsumer.accept("9999");
         stringConsumer.accept("java8好用");
     }
 
@@ -52,6 +61,7 @@ public class TestLambda {
             System.out.println("函数式接口");
             return Integer.compare(o1, o2);
         };
+        System.out.println(comparator.compare(3, 2));
 
     }
 
@@ -87,5 +97,15 @@ public class TestLambda {
 
     public Integer operation(Integer num,MyFun mf){
         return mf.getValue(num);
+    }
+    public static String operationFun(Integer num,MyFunTest mf){
+        System.out.println(mf.testFun("111", "222"));
+        return mf.testFun("111", "222");
+    }
+
+    public static void main(String[] args) {
+        MyFunTest myFunTest = (s1, s2) -> s1 + s2;
+        String s = operationFun(1, myFunTest);
+        System.out.println(s);
     }
 }

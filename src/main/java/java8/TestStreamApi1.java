@@ -43,4 +43,10 @@ public class TestStreamApi1 {
         stream4.forEach(System.out::println);
     }
 
+    @Test
+    public void test02(){
+        Stream<Integer> iterate = Stream.iterate(0, x -> x +1);
+        iterate.limit(10).filter(x->x%2==0).forEach(System.out::println);
+    }
+
 }
