@@ -16,6 +16,7 @@ import java.util.stream.Stream;
  *      3终止操作
  */
 public class TestStreamApi1 {
+    String str = "my name is 007";
 
     @Test
     public void test1(){
@@ -49,4 +50,42 @@ public class TestStreamApi1 {
         iterate.limit(10).filter(x->x%2==0).forEach(System.out::println);
     }
 
+    /**
+     * 把每个单词的长度调用出来
+     */
+    @Test
+    public void test03(){
+        Stream.of(str.split(" ")).filter(s->s.length()>2).map(s->s.length()).forEach(System.out::println);
+    }
+
+    /**
+     * flatMap A->B属性(是个集合), 最终得到所有的A元素里面的所有B属性集合
+     * intStream/longStream 并不是Stream的子类, 所以要进行装箱 boxed
+     */
+    @Test
+    public void test04(){
+        Stream.of(str.split(" ")).flatMap(s->s.chars().boxed()).forEach(i->System.out.println((char) i.intValue()));
+    }
+
+
+    @Test
+    public void test05(){
+        new Random().ints().filter(i->i>100&&i<120).limit(10).forEach(System.out::println);
+    }
+
+    /**
+     * 性能顺序：lambda parallelStream().forEach()>lambda stream().forEach()≈lambda forEach()>classical iterator≈classical forEach>classical for
+     */
+    @Test
+    public void test06(){
+        long start = System.currentTimeMillis();
+        //并行流并不保证顺序
+        str.chars().parallel().forEach(x->System.out.println((char) x));
+        System.out.println(System.currentTimeMillis() - start);
+        //在并行流的情况下 使用forEachOrdered 来保证顺序
+        str.chars().parallel().forEachOrdered(x->System.out.println((char) x));
+        System.out.println(System.currentTimeMillis() - start);
+
+
+    }
 }

@@ -4,7 +4,10 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import static java.lang.Integer.compare;
 
 public class TestLambda2 {
 
@@ -27,7 +30,7 @@ public class TestLambda2 {
             }
             //如果年龄不一样
             else {
-                return -Integer.compare(e1.getAge(), e2.getAge());
+                return -compare(e1.getAge(), e2.getAge());
             }
         });
         //如果年龄不一样 按照年龄对比
@@ -62,5 +65,13 @@ public class TestLambda2 {
     public void test3(){
         op(100L,200L,(x,y)->x+y);
         op(100L,200L,(x,y)->x*y);
+    }
+
+    /**
+     * 并行流 求集合中的最小值
+     */
+    @Test
+    public void test4(){
+        System.out.println(employees.stream().parallel().min(Comparator.comparingInt(Employee::getAge)).get());
     }
 }
