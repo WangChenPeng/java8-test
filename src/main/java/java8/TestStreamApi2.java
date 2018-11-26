@@ -1,6 +1,7 @@
 package java8;
 
 import com.sun.corba.se.impl.ior.iiop.RequestPartitioningComponentImpl;
+import com.sun.org.apache.xml.internal.utils.StringComparable;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -23,10 +24,10 @@ public class TestStreamApi2 {
             new Employee("李四", 222, 222.22),
             new Employee("王五", 33, 333.33),
             new Employee("找六", 44, 44.44),
-            new Employee("孙七", 55, 9555.99),
+            new Employee("孙七qi", 55, 9555.99),
             new Employee("李四", 222, 222.22),
             new Employee("王五", 33, 333.33),
-            new Employee("找六", 44, 44.44),
+            new Employee("找六liu", 44, 44.44),
             new Employee("孙七", 55, 9555.99),
             new Employee("钱八", 66, 666.66)
     );
@@ -117,6 +118,35 @@ public class TestStreamApi2 {
             System.out.print(key+"   ");
             System.out.println(value);
         });
+    }
+
+    /**
+     * 先根据年龄分组然后提取名称到list
+     */
+    @Test
+    public void test8(){
+        Map<Integer, List<String>> collect = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getAge, Collectors.mapping(Employee::getName, Collectors.toList())));
+
+        collect.forEach((x,y)->{
+            System.out.print(x);
+            System.out.println(y);
+        });
+    }
+
+    @Test
+    public void test9(){
+        //改变流中的数据 再转换成int流 获取其中的最大值 判断是否有数据 如果有则打印
+        employees.parallelStream().map(Employee::getName).mapToInt(e->e.length()).max().ifPresent(System.out::println);
+    }
+
+    @Test
+    public void test10(){
+        int n=100;
+        int[] ints = new int[n];
+        Arrays.parallelSetAll(ints, i->i);
+        Arrays.stream(ints).forEach(System.out::print);
+
     }
 
 }

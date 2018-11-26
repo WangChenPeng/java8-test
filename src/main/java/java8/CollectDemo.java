@@ -172,12 +172,14 @@ public class CollectDemo {
         System.out.println("是否全部人的年龄等于13岁:" + b1);
 
         /**
-         *求出年龄总和
+         * 求出年龄总和
          * 先将0作为x，然后运算 0+y，再将这个结果作为x，运算 x+y，y为集合的元素，x就作为运算结果
          */
         System.out.println("------------------------------------------");
         Integer reduce = students.stream().map(Student::getAge).reduce(0, (x, y) -> x + y);
+        String reduce1 = students.stream().map(Student::getName).reduce("", (x, y) -> x + "," + y);
         System.out.println("年龄总和 :" +reduce);
+        System.out.println("名称"+reduce1);
 
         /**
          * 收集

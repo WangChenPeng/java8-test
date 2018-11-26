@@ -1,5 +1,6 @@
 package java8;
 
+import com.sun.tools.internal.xjc.api.Mapping;
 import org.junit.Test;
 
 import java.util.*;
@@ -96,6 +97,10 @@ public class TestStreamApi3 {
         list.stream().flatMap(x->list1.stream().map(y->x+y+" ")).collect(Collectors.toList()).forEach(System.out::println);
         System.out.println("----------------------------");
         list.stream().flatMap(x->Arrays.stream(x.split(","))).collect(Collectors.toList()).forEach(System.out::println);
+        System.out.println("----------------------------");
+
+        System.out.println("----------------------------");
+
     }
 
 }
