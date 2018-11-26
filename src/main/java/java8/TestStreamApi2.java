@@ -1,10 +1,17 @@
 package java8;
 
+import com.sun.corba.se.impl.ior.iiop.RequestPartitioningComponentImpl;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.toList;
 
 /**
  * 练习Stream api的中间操作
@@ -75,6 +82,41 @@ public class TestStreamApi2 {
                 .distinct()
                 .forEach(System.out::println);
 
+    }
+
+    /**
+     * 数据分块
+     */
+    @Test
+    public void test5(){
+        Map<Boolean, List<Employee>> collect = employees.stream().collect(Collectors.partitioningBy(e -> e.getAge() > 40));
+        collect.forEach((key, value) -> {
+            System.out.print(key+"    ");
+            System.out.println(value);
+        });
+    }
+
+    @Test
+    public void test7(){
+        Map<Boolean, List<Employee>> collect = employees.stream().collect(Collectors.partitioningBy(e -> e.getAge() > 40, toList()));
+        collect.forEach((key,value)->{
+            System.out.print(key+"   ");
+            System.out.println(value);
+        });
+
+    }
+
+    /**
+     * 分组
+     * 统计数量
+     */
+    @Test
+    public void test6(){
+        Map<Integer, Long> collect = employees.stream().collect(Collectors.groupingBy(Employee::getAge, counting()));
+        collect.forEach((key,value)->{
+            System.out.print(key+"   ");
+            System.out.println(value);
+        });
     }
 
 }
