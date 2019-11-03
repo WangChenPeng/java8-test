@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,31 +33,49 @@ public class TestStreamApi2 {
             new Employee("钱八", 66, 666.66)
     );
 
+    @Test
+    public void testPool1() {
+
+
+        employees.parallelStream().forEach((e) -> {
+            System.out.println(Thread.currentThread().getName());
+            System.out.println(e);
+        });
+        System.out.println("============");
+        ForkJoinPool forkJoinPool = new ForkJoinPool(3);
+        forkJoinPool.submit(() -> {
+            employees.parallelStream().forEach((e) -> {
+                System.out.println(Thread.currentThread().getName());
+                System.out.println(e);
+            });
+        });
+    }
+
+
     /**
      * 筛选与切片
-     *
      */
     @Test
-    public void test1(){
+    public void test1() {
         //中间操作 过滤年龄大于55的 内部迭代 迭代操作由 Stream api 完成
         Stream<Employee> stream = employees.stream()
                 .filter((e) -> {
-                                    System.out.println("中间操作");
-                                    return e.getAge()>55;
-                                });
+                    System.out.println("中间操作");
+                    return e.getAge() > 55;
+                });
 
         // 终止操作 后一次性执行所有操作 即为 惰性求值
         stream.forEach(System.out::println);
     }
 
     @Test
-    public void test2(){
+    public void test2() {
         //首先获取流 然后过滤 条件为工资大于100 并分页输出2条记录
         //limit短路可以用于提高效率
         Stream<Employee> limit = employees.stream()
-                .filter((e)->{
+                .filter((e) -> {
                     System.out.println("短路");
-                    return e.getSalary()>100 ;
+                    return e.getSalary() > 100;
                 })
                 .limit(8);
 
@@ -65,20 +84,20 @@ public class TestStreamApi2 {
     }
 
     @Test
-    public void test3(){
+    public void test3() {
         //获取流后首先过滤 然后忽略前两条数据 后并遍历输出
         employees.stream()
-                .filter((e)->e.getSalary()>100)
+                .filter((e) -> e.getSalary() > 100)
                 .skip(2)
                 .forEach(System.out::println);
     }
 
 
     @Test
-    public void test4(){
+    public void test4() {
         //去重根据hashCode和equals来判断 要重写方法
         employees.stream()
-                .filter((e)->e.getSalary()>100)
+                .filter((e) -> e.getSalary() > 100)
                 .skip(2)
                 .distinct()
                 .forEach(System.out::println);
@@ -89,19 +108,19 @@ public class TestStreamApi2 {
      * 数据分块
      */
     @Test
-    public void test5(){
+    public void test5() {
         Map<Boolean, List<Employee>> collect = employees.stream().collect(Collectors.partitioningBy(e -> e.getAge() > 40));
         collect.forEach((key, value) -> {
-            System.out.print(key+"    ");
+            System.out.print(key + "    ");
             System.out.println(value);
         });
     }
 
     @Test
-    public void test7(){
+    public void test7() {
         Map<Boolean, List<Employee>> collect = employees.stream().collect(Collectors.partitioningBy(e -> e.getAge() > 40, toList()));
-        collect.forEach((key,value)->{
-            System.out.print(key+"   ");
+        collect.forEach((key, value) -> {
+            System.out.print(key + "   ");
             System.out.println(value);
         });
 
@@ -112,10 +131,10 @@ public class TestStreamApi2 {
      * 统计数量
      */
     @Test
-    public void test6(){
+    public void test6() {
         Map<Integer, Long> collect = employees.stream().collect(Collectors.groupingBy(Employee::getAge, counting()));
-        collect.forEach((key,value)->{
-            System.out.print(key+"   ");
+        collect.forEach((key, value) -> {
+            System.out.print(key + "   ");
             System.out.println(value);
         });
     }
@@ -124,27 +143,27 @@ public class TestStreamApi2 {
      * 先根据年龄分组然后提取名称到list
      */
     @Test
-    public void test8(){
+    public void test8() {
         Map<Integer, List<String>> collect = employees.stream()
                 .collect(Collectors.groupingBy(Employee::getAge, Collectors.mapping(Employee::getName, Collectors.toList())));
 
-        collect.forEach((x,y)->{
+        collect.forEach((x, y) -> {
             System.out.print(x);
             System.out.println(y);
         });
     }
 
     @Test
-    public void test9(){
+    public void test9() {
         //改变流中的数据 再转换成int流 获取其中的最大值 判断是否有数据 如果有则打印
-        employees.parallelStream().map(Employee::getName).mapToInt(e->e.length()).max().ifPresent(System.out::println);
+        employees.parallelStream().map(Employee::getName).mapToInt(e -> e.length()).max().ifPresent(System.out::println);
     }
 
     @Test
-    public void test10(){
-        int n=100;
+    public void test10() {
+        int n = 100;
         int[] ints = new int[n];
-        Arrays.parallelSetAll(ints, i->i);
+        Arrays.parallelSetAll(ints, i -> i);
         Arrays.stream(ints).forEach(System.out::print);
 
     }
